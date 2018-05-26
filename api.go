@@ -125,10 +125,6 @@ func FilesDeleteRequest(ids string) (err error) {
 		return
 	}
 
-	err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return
-	}
 	defer resp.Body.Close()
 	return
 }
