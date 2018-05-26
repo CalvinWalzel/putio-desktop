@@ -18,6 +18,7 @@ var (
 	AccessToken      = flag.String("oauth-token", "", "Oauth Token")
 	LocalFolderPath  = flag.String("local-path", "~/Putio Desktop", "local folder to fetch")
 	CheckInterval    = flag.Int("check-minutes", 5, "check interval of remote files in put.io")
+	Callback         = flag.String("callback", "", "Callback that'll be used after a download iteration")
 )
 
 // Globals
@@ -63,6 +64,11 @@ func WalkAndDownload(parentId int, folderPath string, runWg *sync.WaitGroup, rep
 				go DownloadFile(file, path, runWg, reportCh)
 			}
 		}
+	}
+
+	if *Callback != "" {
+		log.Println("Executing callback...")
+		exec.Command(*Callback).Run()
 	}
 }
 
