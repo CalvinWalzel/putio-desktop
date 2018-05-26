@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
-	"strings"
 )
 
 const ApiUrl = "https://api.put.io/v2/"
@@ -119,9 +118,10 @@ func FilesListRequest(parentId int) (files []File, err error) {
 
 func FilesDeleteRequest(ids string) (err error) {
 	params := map[string]string{"file_ids": ids}
-	deleteUrl := MakeUrl("files/delete", params)
-
-	resp, err := http.Post(deleteUrl)
+	deleteUrl := MakeUrl("files/delete", nil)
+	deleteValues := url.Values{}
+	deleteValues.Add("file_ids", ids)
+	resp, err := http.PostForm(deleteUrl, postValues)
 	if err != nil {
 		return
 	}
@@ -131,4 +131,5 @@ func FilesDeleteRequest(ids string) (err error) {
 		return
 	}
 	defer resp.Body.Close()
+	return
 }

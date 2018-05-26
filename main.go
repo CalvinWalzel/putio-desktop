@@ -10,6 +10,8 @@ import (
 	"path"
 	"sync"
 	"time"
+	"strconv"
+	"strings"
 )
 
 // Settings
@@ -53,7 +55,7 @@ func WalkAndDownload(parentId int, folderPath string, runWg *sync.WaitGroup, rep
 		return
 	}
 
-	ids := ''
+	ids := ""
 	for _, file := range files {
 		path := path.Join(folderPath, file.Name)
 		if file.ContentType == "application/x-directory" {
@@ -66,11 +68,11 @@ func WalkAndDownload(parentId int, folderPath string, runWg *sync.WaitGroup, rep
 				go DownloadFile(file, path, runWg, reportCh)
 			}
 		}
-		ids += file.Id + ","
+		ids += strconv.Itoa(file.Id) + ","
 	}
 
 	if ids != "" {
-		ids = TrimSuffix(ids, ",")
+		ids = strings.TrimSuffix(ids, ",")
 		err := FilesDeleteRequest(ids)
 		if err != nil {
 			log.Println(err)
