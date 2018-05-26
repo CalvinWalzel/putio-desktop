@@ -121,7 +121,7 @@ func FilesDeleteRequest(ids string) (err error) {
 	deleteUrl := MakeUrl("files/delete", nil)
 	deleteValues := url.Values{}
 	deleteValues.Add("file_ids", ids)
-	resp, err := http.PostForm(deleteUrl, postValues)
+	resp, err := http.PostForm(deleteUrl, deleteValues)
 	if err != nil {
 		return
 	}
