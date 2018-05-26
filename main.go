@@ -66,11 +66,6 @@ func WalkAndDownload(parentId int, folderPath string, runWg *sync.WaitGroup, rep
 			}
 		}
 	}
-
-	if *Callback != "" {
-		log.Println("Executing callback...")
-		exec.Command(*Callback).Run()
-	}
 }
 
 func StartWalkAndDownloadClearReports(RemoteFolderId int, reportCh chan Report) {
@@ -81,6 +76,11 @@ func StartWalkAndDownloadClearReports(RemoteFolderId int, reportCh chan Report) 
 	runWg.Add(1)
 	go WalkAndDownload(RemoteFolderId, *LocalFolderPath, &runWg, reportCh)
 	runWg.Wait()
+
+	if *Callback != "" {
+		log.Println("Executing callback...")
+		exec.Command(*Callback).Run()
+	}
 }
 
 type Report struct {
