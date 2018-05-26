@@ -81,7 +81,7 @@ func StartWalkAndDownloadClearReports(RemoteFolderId int, reportCh chan Report) 
 		log.Println("Executing callback...")
 		c := exec.Command(*Callback)
 		
-		if err := c.Run() != nil {
+		if err := c.Run(); err != nil {
 			log.Println("Error: ", err)
 		}
 	}
