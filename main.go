@@ -57,7 +57,6 @@ func WalkAndDownload(parentId int, folderPath string, runWg *sync.WaitGroup, rep
 		return
 	}
 
-	ids := ""
 	for _, file := range files {
 		path := path.Join(folderPath, file.Name)
 		if file.ContentType == "application/x-directory" {
@@ -70,7 +69,7 @@ func WalkAndDownload(parentId int, folderPath string, runWg *sync.WaitGroup, rep
 				go DownloadFile(file, path, runWg, reportCh)
 			}
 		}
-		DownloadedIds = append(DownloadedIds, strconv.Itoa(file.Id))
+		DownloadedIds := append(DownloadedIds, strconv.Itoa(file.Id))
 	}
 }
 
