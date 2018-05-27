@@ -85,7 +85,7 @@ func StartWalkAndDownloadClearReports(RemoteFolderId int, reportCh chan Report) 
 
 	// Delete all files that were downloaded
 	if *RemoveOnRemote && len(DownloadedIds) != 0 {
-		log.Println("Deleting synced files on remote...", err)		
+		log.Println("Deleting synced files on remote...")
 		ids := strings.Join(DownloadedIds, ",")
 		ids = strings.TrimSuffix(ids, ",")
 		err := FilesDeleteRequest(ids)
