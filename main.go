@@ -69,7 +69,7 @@ func WalkAndDownload(parentId int, folderPath string, runWg *sync.WaitGroup, rep
 				go DownloadFile(file, path, runWg, reportCh)
 			}
 		}
-		DownloadedIds := append(DownloadedIds, strconv.Itoa(file.Id))
+		DownloadedIds = append(DownloadedIds, strconv.Itoa(file.Id))
 	}
 }
 
