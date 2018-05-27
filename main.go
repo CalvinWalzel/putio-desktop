@@ -94,7 +94,7 @@ func StartWalkAndDownloadClearReports(RemoteFolderId int, reportCh chan Report) 
 		}
 	}
 
-	if *Callback != "" {
+	if *Callback != "" && len(DownloadedIds) != 0 {
 		log.Println("Executing callback...")
 		c := exec.Command(*Callback)
 		
