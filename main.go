@@ -21,7 +21,8 @@ var (
 	AccessToken      = flag.String("oauth-token", "", "Oauth Token")
 	LocalFolderPath  = flag.String("local-path", "~/Putio Desktop", "local folder to fetch")
 	CheckInterval    = flag.Int("check-minutes", 5, "check interval of remote files in put.io")
-	Callback         = flag.String("callback", "", "Callback that'll be used after a download iteration")
+	Callback         = flag.String("callback", "", "callback that'll be used after a download iteration")
+	RemoveOnRemote   = flag.Bool("remove-remote", false, "remove files on put.io")
 )
 
 // Globals
@@ -31,6 +32,7 @@ var (
 	TotalDownloaded int64
 	TotalToDownload int64
 	TotalFilesSize  int64
+	DownloadedIds   []string
 )
 
 // Download functions
@@ -68,16 +70,7 @@ func WalkAndDownload(parentId int, folderPath string, runWg *sync.WaitGroup, rep
 				go DownloadFile(file, path, runWg, reportCh)
 			}
 		}
-		ids += strconv.Itoa(file.Id) + ","
-	}
-
-	if ids != "" {
-		ids = strings.TrimSuffix(ids, ",")
-		err := FilesDeleteRequest(ids)
-		if err != nil {
-			log.Println(err)
-			return
-		}
+		DownloadedIds = append(DownloadedIds, strconv.Itoa(file.Id))
 	}
 }
 
@@ -89,6 +82,18 @@ func StartWalkAndDownloadClearReports(RemoteFolderId int, reportCh chan Report) 
 	runWg.Add(1)
 	go WalkAndDownload(RemoteFolderId, *LocalFolderPath, &runWg, reportCh)
 	runWg.Wait()
+
+	// Delete all files that were downloaded
+	if *RemoveOnRemote && len(DownloadedIds) != 0 {
+		log.Println("Deleting synced files on remote...", err)		
+		ids = strings.join(DownloadedIds, ",")
+		ids = strings.TrimSuffix(ids, ",")
+		err := FilesDeleteRequest(ids)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
 
 	if *Callback != "" {
 		log.Println("Executing callback...")
