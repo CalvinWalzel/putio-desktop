@@ -77,6 +77,7 @@ func StartWalkAndDownloadClearReports(RemoteFolderId int, reportCh chan Report) 
 	TotalFilesSize = 0
 	TotalDownloaded = 0
 	TotalToDownload = 0
+	DownloadedIds = []string{}
 	var runWg sync.WaitGroup
 	runWg.Add(1)
 	go WalkAndDownload(RemoteFolderId, *LocalFolderPath, &runWg, reportCh)
